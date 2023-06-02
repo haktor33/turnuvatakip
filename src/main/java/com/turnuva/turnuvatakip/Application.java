@@ -20,8 +20,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    private final String moduleName="test";
-    private final String apiVersion="v.01";
+    private final String moduleName="Turnuva";
+    private final String apiVersion="v.03";
 
     @Bean
     public OpenAPI customOpenAPI() {

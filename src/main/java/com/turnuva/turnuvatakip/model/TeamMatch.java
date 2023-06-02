@@ -1,7 +1,6 @@
 package com.turnuva.turnuvatakip.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "team_matches")
@@ -11,30 +10,45 @@ public class TeamMatch {
 
     }
 
-    public TeamMatch(Team team1, Team team2,int score) {
+    public TeamMatch(Team team1, Team team2, String score) {
         this.team1 = team1;
         this.team2 = team2;
         this.score = score;
+        var scores = score.split("-");
+        var team1Goal = Integer.parseInt(scores[0]);
+        var team2Goal = Integer.parseInt(scores[1]);
+        if (team1Goal > team2Goal) {
+            this.setTeam1Point(3);
+            this.setTeam2Point(0);
+        } else if (team1Goal < team2Goal) {
+            this.setTeam1Point(0);
+            this.setTeam2Point(3);
+        } else {
+            this.setTeam1Point(1);
+            this.setTeam2Point(1);
+        }
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotBlank
     @ManyToOne
     @JoinColumn(name = "team1_id")
     private Team team1;
 
-    @NotBlank
+    @Column(name = "team1_point")
+    private int team1Point;
+
     @ManyToOne
     @JoinColumn(name = "team2_id")
     private Team team2;
 
+    @Column(name = "team2_point")
+    private int team2Point;
 
     @Column(name = "score")
-    private int score;
-
+    private String score;
 
     public long getId() {
         return id;
@@ -60,12 +74,28 @@ public class TeamMatch {
         this.team2 = team2;
     }
 
-    public int getScore() {
+    public int getTeam1Point() {
+        return team1Point;
+    }
+
+    public void setTeam1Point(int team1Point) {
+        this.team1Point = team1Point;
+    }
+
+    public int getTeam2Point() {
+        return team2Point;
+    }
+
+    public void setTeam2Point(int team2Point) {
+        this.team2Point = team2Point;
+    }
+
+    public String getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(String score) {
         this.score = score;
     }
-    
+
 }

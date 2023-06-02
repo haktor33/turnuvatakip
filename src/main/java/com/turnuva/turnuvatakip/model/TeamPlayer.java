@@ -1,7 +1,6 @@
 package com.turnuva.turnuvatakip.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "team_players", uniqueConstraints = {
@@ -13,21 +12,20 @@ public class TeamPlayer {
 
     }
 
-    public TeamPlayer(Team team, User player) {
+    public TeamPlayer(Team team, User player,String number) {
         this.team = team;
         this.player = player;
+        this.number = number;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotBlank
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @NotBlank
     @ManyToOne
     @JoinColumn(name = "player_id")
     private User player;

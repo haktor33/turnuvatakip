@@ -24,7 +24,6 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotBlank
     @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
@@ -33,7 +32,6 @@ public class Team {
     @Column(name = "team_name")
     private String teamName;
 
-    @NotBlank
     @ManyToOne
     @JoinColumn(name = "team_leader_id")
     private User teamLeader;

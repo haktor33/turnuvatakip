@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.turnuva.turnuvatakip.model.Team;
-import com.turnuva.turnuvatakip.respository.TeamRepository;
+import com.turnuva.turnuvatakip.customQueries.IScoreBoard;
+import com.turnuva.turnuvatakip.model.TeamMatch;
+import com.turnuva.turnuvatakip.respository.TeamMatchRepository;
 
 @RestController
-@RequestMapping("/api/team")
-public class TeamController {
+@RequestMapping("/api/team/match")
+public class TeamMatchController {
     @Autowired
-    TeamRepository repository;
+    TeamMatchRepository repository;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/getAll")
-    public ResponseEntity<List<Team>> getAll() {
-        var list = new ArrayList<Team>();
+    public ResponseEntity<List<TeamMatch>> getAll() {
+        var list = new ArrayList<TeamMatch>();
         repository.findAll().forEach(list::add);
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -38,8 +39,20 @@ public class TeamController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/getScoreBoard")
+    public ResponseEntity<List<IScoreBoard>> getScoreBoard() {
+        var list = new ArrayList<IScoreBoard>();
+        repository.getScoreBoard().forEach(list::add);
+        if (list.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/getById")
-    public ResponseEntity<Team> getById(@RequestParam(required = false) Long id) {
+    public ResponseEntity<TeamMatch> getById(@RequestParam(required = false) Long id) {
         var modelData = repository.findById(id);
         if (modelData != null) {
             return new ResponseEntity<>(modelData.get(), HttpStatus.OK);
@@ -50,18 +63,18 @@ public class TeamController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<Team> save(@RequestParam(required = false) Long id, @RequestBody Team model) {
+    public ResponseEntity<TeamMatch> save(@RequestParam(required = false) Long id, @RequestBody TeamMatch model) {
         var data = repository.findById(id == null ? -1 : id);
         try {
-            Team modelData;
+            TeamMatch modelData;
             if (data.isPresent()) {
                 modelData = data.get();
-                modelData.setTeamLeader(model.getTeamLeader());
-                modelData.setTeamName(model.getTeamName());
-                modelData.setTournament(model.getTournament());
+                modelData.setTeam1(model.getTeam1());
+                modelData.setTeam2(model.getTeam2());
+                modelData.setScore(model.getScore());
                 repository.save(modelData);
             } else {
-                var newDto = new Team(model.getTournament(), model.getTeamName(), model.getTeamLeader());
+                var newDto = new TeamMatch(model.getTeam1(), model.getTeam2(), model.getScore());
                 modelData = repository.save(newDto);
             }
             return new ResponseEntity<>(modelData, HttpStatus.OK);
@@ -81,5 +94,6 @@ public class TeamController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
 }

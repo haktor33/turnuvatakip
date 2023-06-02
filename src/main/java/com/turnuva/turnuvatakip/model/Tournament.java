@@ -1,4 +1,6 @@
 package com.turnuva.turnuvatakip.model;
+import com.turnuva.turnuvatakip.constants.Enums.ETournamentType;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "tournaments", uniqueConstraints = {
@@ -10,7 +12,7 @@ public class Tournament {
 
     }
 
-    public Tournament(int year, int typeValue) {
+    public Tournament(int year, ETournamentType typeValue) {
         this.year = year;
         this.typeValue = typeValue;
     }
@@ -22,8 +24,9 @@ public class Tournament {
     @Column(name = "year")
     private int year;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "typeValue")
-    private int typeValue;
+    private ETournamentType typeValue;
 
     public long getId() {
         return id;
@@ -41,11 +44,11 @@ public class Tournament {
         this.year = year;
     }
 
-    public int getTypeValue() {
+    public ETournamentType getTypeValue() {
         return typeValue;
     }
 
-    public void setTypeValue(int typeValue) {
+    public void setTypeValue(ETournamentType typeValue) {
         this.typeValue = typeValue;
     }   
 }

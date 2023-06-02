@@ -73,7 +73,6 @@ public class TournamentController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/add")
     public ResponseEntity<?> add(@RequestBody Tournament model) {
-        // var data = repository.findById(id == null ? -1 : id);
         try {
             Tournament newDto = new Tournament(model.getYear(), model.getTypeValue());
             repository.saveAndFlush(newDto);
