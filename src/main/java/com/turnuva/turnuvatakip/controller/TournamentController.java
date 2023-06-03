@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +20,12 @@ import com.turnuva.turnuvatakip.model.Tournament;
 import com.turnuva.turnuvatakip.payload.response.MessageResponse;
 import com.turnuva.turnuvatakip.respository.TournamentRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Tournament", description = "Turnuva ait İşlemler yapılmaktadır. Yeni turnuva ekleme,silme,düzeltme ve listeleme.")
 @RestController
 @RequestMapping("/api/tournament")
-public class TournamentController {
+public class TournamentController extends _BaseController {
     @Autowired
     TournamentRepository repository;
 
@@ -52,34 +54,23 @@ public class TournamentController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestParam(required = false) Long id, @RequestBody Tournament model) {
-        var data = repository.findById(id == null ? -1 : id);
+    public ResponseEntity<?> save(@RequestBody Tournament model) {
+        var data = repository.findById(model.getId());
+        Tournament modelData;
         try {
             if (data.isPresent()) {
-                Tournament modelData;
                 modelData = data.get();
                 modelData.setYear(model.getYear());
                 modelData.setTypeValue(model.getTypeValue());
                 repository.save(modelData);
-                return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+                return new ResponseEntity<>(modelData, HttpStatus.OK);
+            } else {
+                Tournament newDto = new Tournament(model.getYear(), model.getTypeValue());
+                modelData = repository.save(newDto);
             }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(modelData, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/add")
-    public ResponseEntity<?> add(@RequestBody Tournament model) {
-        try {
-            Tournament newDto = new Tournament(model.getYear(), model.getTypeValue());
-            repository.saveAndFlush(newDto);
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new MessageResponse(e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

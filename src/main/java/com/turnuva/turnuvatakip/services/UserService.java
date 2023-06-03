@@ -41,12 +41,15 @@ public class UserService {
         }
     }
 
-    public User save(Long id, User user) {
-        Optional<User> userData = userRepository.findById(id);
+    public User save(User user) {
+        Optional<User> userData = null;
+        if (user.getId() > 0) {
+            userData = userRepository.findById(user.getId());
+        }
         try {
-            if (userData.isPresent()) {
+            if (userData != null && userData.isPresent()) {
                 User userModel = userData.get();
-                userModel.setUserName(user.getUserName());
+                userModel.setUserName(user.getUsername());
                 userModel.setFullName(user.getFullName());
                 userModel.setRole(user.getRole());
                 userModel.setEmail(user.getEmail());
@@ -54,7 +57,7 @@ public class UserService {
                 return userRepository.save(userModel);
             } else {
                 User userModel = userRepository
-                        .save(new User(user.getUserName(), user.getFullName(), user.getRole(), user.getEmail(),
+                        .save(new User(user.getUsername(), user.getFullName(), user.getRole(), user.getEmail(),
                                 user.getAge(), "1"));
                 return userModel;
             }

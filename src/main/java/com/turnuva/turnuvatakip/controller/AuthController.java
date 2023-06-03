@@ -14,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +28,12 @@ import com.turnuva.turnuvatakip.respository.UserRepository;
 import com.turnuva.turnuvatakip.security.jwt.JwtUtils;
 import com.turnuva.turnuvatakip.security.services.UserDetailsImpl;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
-@RestController
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Authantication", description = "Kullanıcı ait işlemlerin yapıldığı metotlardır. Yeni kullanıcı ekleme ve login işlemleri gibi.")
 @RequestMapping("/api/auth")
-public class AuthController {
+@RestController
+public class AuthController extends _BaseController {
     @Autowired
     AuthenticationManager authenticationManager;
 

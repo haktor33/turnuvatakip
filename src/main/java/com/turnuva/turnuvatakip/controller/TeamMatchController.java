@@ -20,9 +20,12 @@ import com.turnuva.turnuvatakip.customQueries.IScoreBoard;
 import com.turnuva.turnuvatakip.model.TeamMatch;
 import com.turnuva.turnuvatakip.respository.TeamMatchRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Team-Match", description = "Takım eşleşme İşlemleri yapılmaktadır. Yeni eşleşme ekleme,silme,düzeltme ve listeleme.")
 @RestController
 @RequestMapping("/api/team/match")
-public class TeamMatchController {
+public class TeamMatchController extends _BaseController{
     @Autowired
     TeamMatchRepository repository;
 

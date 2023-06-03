@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turnuva.turnuvatakip.model.User;
 import com.turnuva.turnuvatakip.services.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "User", description = "Kişiye ait İşlemler yapılmaktadır. Yeni kişi ekleme,silme,düzeltme ve listeleme.")
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController extends _BaseController{
     @Autowired
     UserService userService;
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,8 +60,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<User> save(@RequestParam(required = false) Long id, @RequestBody User user) {
-        var userData = userService.save(id, user);
+    public ResponseEntity<User> save( @RequestBody User user) {
+        var userData = userService.save(user);
         if (userData != null) {
             return new ResponseEntity<>(userData, HttpStatus.OK);
         }

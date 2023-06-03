@@ -18,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.turnuva.turnuvatakip.security.services.UserDetailsServiceImpl;
 
-
 public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired
   private JwtUtils jwtUtils;
@@ -37,12 +36,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        
-        UsernamePasswordAuthenticationToken authentication = 
-            new UsernamePasswordAuthenticationToken(userDetails,
-                                                    null,
-                                                    userDetails.getAuthorities());
-        
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+            null,
+            userDetails.getAuthorities());
+
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,6 +54,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
   private String parseJwt(HttpServletRequest request) {
     String jwt = jwtUtils.getJwtFromCookies(request);
+    if (jwt == null) {
+      jwt = request.getHeader("Authorization");
+      if (jwt != null)
+        jwt = jwt.split("Bearer ")[1];
+    }
     return jwt;
   }
 }

@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turnuva.turnuvatakip.model.TeamPlayer;
 import com.turnuva.turnuvatakip.respository.TeamPlayerRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Team-Player", description = "Takım oyuncuları İşlemleri yapılmaktadır. Yeni oyuncu ekleme,silme,düzeltme ve listeleme.")
 @RestController
 @RequestMapping("/api/team/player")
-public class TeamPlayerController {
+public class TeamPlayerController extends _BaseController {
     @Autowired
     TeamPlayerRepository repository;
 
@@ -59,7 +62,7 @@ public class TeamPlayerController {
                 modelData.setNumber(model.getNumber());
                 modelData.setPlayer(model.getPlayer());
                 modelData.setTeam(model.getTeam());
-                repository.save(modelData);
+                modelData = repository.save(modelData);
             } else {
                 var newDto = new TeamPlayer(model.getTeam(), model.getPlayer(), model.getNumber());
                 modelData = repository.save(newDto);

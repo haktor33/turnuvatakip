@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turnuva.turnuvatakip.model.Team;
 import com.turnuva.turnuvatakip.respository.TeamRepository;
 
-@RestController
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Team", description = "Takım İşlemleri yapılmaktadır. Yeni Takım ekleme,silme,düzeltme ve listeleme.")
 @RequestMapping("/api/team")
-public class TeamController {
+@RestController
+public class TeamController extends _BaseController{
     @Autowired
     TeamRepository repository;
 
