@@ -68,4 +68,12 @@ public class TeamPlayer {
         this.number = number;
     }
 
+    public Boolean getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(Boolean isMain) {
+        this.isMain = isMain;
+    }
+
 }

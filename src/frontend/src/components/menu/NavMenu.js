@@ -24,6 +24,11 @@ const NavMenu = () => {
                 label: <Link to="/scoreboard">{i18n.t("pages.scoreboard")}</Link>,
             },
             {
+                key: 'teamleader',
+                icon: <BorderlessTableOutlined />,
+                label: <Link to="/teamleader">{i18n.t("pages.teamLeader")}</Link>,
+            },
+            {
                 key: '4',
                 icon: <LoginOutlined />,
                 label: <Link to="/login">{i18n.t("pages.login")}</Link>,

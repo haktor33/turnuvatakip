@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.turnuva.turnuvatakip.constants.Enums.ERol;
 import com.turnuva.turnuvatakip.model.User;
 import com.turnuva.turnuvatakip.payload.request.LoginRequest;
 import com.turnuva.turnuvatakip.payload.request.SignupRequest;
@@ -85,7 +86,7 @@ public class AuthController extends _BaseController {
         User user = new User(
                 signUpRequest.getUsername(),
                 signUpRequest.getUsername(),
-                signUpRequest.getRole(),
+                ERol.ROLE_USER.toString(),
                 signUpRequest.getEmail(),
                 0,
                 encoder.encode(signUpRequest.getPassword()));

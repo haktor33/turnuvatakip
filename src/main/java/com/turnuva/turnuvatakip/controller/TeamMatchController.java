@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turnuva.turnuvatakip.customQueries.IScoreBoard;
 import com.turnuva.turnuvatakip.model.TeamMatch;
+import com.turnuva.turnuvatakip.payload.response.MessageResponse;
 import com.turnuva.turnuvatakip.respository.TeamMatchRepository;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,11 +35,7 @@ public class TeamMatchController extends _BaseController{
     public ResponseEntity<List<TeamMatch>> getAll() {
         var list = new ArrayList<TeamMatch>();
         repository.findAll().forEach(list::add);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -46,11 +43,7 @@ public class TeamMatchController extends _BaseController{
     public ResponseEntity<List<IScoreBoard>> getScoreBoard() {
         var list = new ArrayList<IScoreBoard>();
         repository.getScoreBoard().forEach(list::add);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -66,8 +59,8 @@ public class TeamMatchController extends _BaseController{
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<TeamMatch> save(@RequestParam(required = false) Long id, @RequestBody TeamMatch model) {
-        var data = repository.findById(id == null ? -1 : id);
+    public ResponseEntity<?> save(@RequestBody TeamMatch model) {
+        var data = repository.findById(model.getId());
         try {
             TeamMatch modelData;
             if (data.isPresent()) {
@@ -75,6 +68,7 @@ public class TeamMatchController extends _BaseController{
                 modelData.setTeam1(model.getTeam1());
                 modelData.setTeam2(model.getTeam2());
                 modelData.setScore(model.getScore());
+                modelData.calculatePoints();
                 repository.save(modelData);
             } else {
                 var newDto = new TeamMatch(model.getTeam1(), model.getTeam2(), model.getScore());
@@ -82,8 +76,7 @@ public class TeamMatchController extends _BaseController{
             }
             return new ResponseEntity<>(modelData, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new MessageResponse(e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

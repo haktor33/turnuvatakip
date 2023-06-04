@@ -1,9 +1,11 @@
-import React from "react";
-import { Tabs } from 'antd';
+import React, { useEffect } from "react";
+import { Tabs, message } from 'antd';
 import UserList from "components/control_panel/UserList";
 import TournamentList from "components/control_panel/TournamentList";
 import MatchList from "components/control_panel/MatchList";
 import ScoreBoardList from "components/control_panel/ScoreBoardList";
+import TeamList from "components/control_panel/TeamList";
+import TeamPlayerList from "components/control_panel/TeamPlayerList";
 
 const items = [
     {
@@ -17,20 +19,35 @@ const items = [
         children: <TournamentList isEditable />,
     },
     {
-        key: '3',
+        key: 'teamList',
+        label: `Team List`,
+        children: <TeamList isEditable />,
+    },
+    {
+        key: 'playerList',
+        label: `Team Player List`,
+        children: <TeamPlayerList isEditable />,
+    },
+    {
+        key: '5',
         label: `Match List`,
         children: <MatchList isEditable />,
     },
     {
-        key: '4',
+        key: 'scoreboard',
         label: `Score Board List`,
         children: <ScoreBoardList />,
     },
 ];
 
 const AdminPage = () => {
+    const userData = JSON.parse(localStorage.getItem('AuthStorage'));
+    if (!userData.roles.includes("ROLE_ADMIN")) {
+        message.error("Bu sayfayi gorme yetkiniz yok!");
+        return <></>
+    }
 
-    return <Tabs destroyInactiveTabPane defaultActiveKey="4" items={items} />
+    return <Tabs destroyInactiveTabPane defaultActiveKey="playerList" items={items} />
 
 }
 

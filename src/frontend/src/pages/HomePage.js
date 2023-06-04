@@ -7,7 +7,7 @@ import TeamPlayerList from "components/control_panel/TeamPlayerList";
 
 const items = [
     {
-        key: '2',
+        key: '1',
         label: 'Tournament List',
         children: <TournamentList isEditable={false} />,
     },
@@ -29,7 +29,7 @@ const items = [
 ];
 
 const HomePage = () => {
-    return <Tabs destroyInactiveTabPane defaultActiveKey="2" items={items} />
+    return <Tabs destroyInactiveTabPane defaultActiveKey="1" items={items} />
 }
 
 export default HomePage;

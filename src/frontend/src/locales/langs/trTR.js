@@ -5,6 +5,7 @@ export default {
         "admin": "Yönetici",
         "scoreboard": "Puan Durumu",
         "login": "Giriş Ekranı",
+        "teamLeader":"Takım Sorumlusu"
     },
     "english": "İngilizce",
     "turkish": "Türkçe",

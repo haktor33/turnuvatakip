@@ -34,11 +34,7 @@ public class TournamentController extends _BaseController {
     public ResponseEntity<List<Tournament>> getAll() {
         var list = new ArrayList<Tournament>();
         repository.findAll().forEach(list::add);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

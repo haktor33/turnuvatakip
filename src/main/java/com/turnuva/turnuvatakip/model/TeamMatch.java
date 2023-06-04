@@ -14,18 +14,27 @@ public class TeamMatch {
         this.team1 = team1;
         this.team2 = team2;
         this.score = score;
-        var scores = score.split("-");
-        var team1Goal = Integer.parseInt(scores[0]);
-        var team2Goal = Integer.parseInt(scores[1]);
-        if (team1Goal > team2Goal) {
-            this.setTeam1Point(3);
-            this.setTeam2Point(0);
-        } else if (team1Goal < team2Goal) {
-            this.setTeam1Point(0);
-            this.setTeam2Point(3);
+        calculatePoints();
+    }
+
+    public void calculatePoints(){
+        if (this.score != null && !this.score.trim().isEmpty()) {
+            var scores = score.split("-");
+            var team1Goal = Integer.parseInt(scores[0]);
+            var team2Goal = Integer.parseInt(scores[1]);
+            if (team1Goal > team2Goal) {
+                this.setTeam1Point(3);
+                this.setTeam2Point(0);
+            } else if (team1Goal < team2Goal) {
+                this.setTeam1Point(0);
+                this.setTeam2Point(3);
+            } else {
+                this.setTeam1Point(1);
+                this.setTeam2Point(1);
+            }
         } else {
-            this.setTeam1Point(1);
-            this.setTeam2Point(1);
+            this.setTeam1Point(0);
+            this.setTeam2Point(0);
         }
     }
 

@@ -13,8 +13,27 @@ const formItemLayout = {
     wrapperCol: { sm: { span: 24 }, md: { span: 16 } }
 };
 
-const ModuleCodeEdit = (props) => {
+const UserEdit = (props) => {
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (props.id) {
+            props.setLoading(true);
+            userService.getById(props.id).then(result => {
+                form.setFieldsValue(result);
+                props.setLoading(false);
+            }).catch(err => {
+                props.setLoading(false);
+                if (err.i18n) {
+                    message.error(i18n.t(err.i18n));
+                } else {
+                    message.error(err.message);
+                }
+            });
+        } else {
+            form.resetFields();
+        }
+    }, [props.id, props.componentKey]);
 
     const onFinish = async (values) => {
         props.setLoading(true);
@@ -37,26 +56,6 @@ const ModuleCodeEdit = (props) => {
         console.log('Failed:', errorInfo);
     };
 
-
-    useEffect(() => {
-        if (props.id) {
-            props.setLoading(true);
-            userService.getById(props.id).then(result => {
-                form.setFieldsValue(result);
-                props.setLoading(false);
-            }).catch(err => {
-                props.setLoading(false);
-                if (err.i18n) {
-                    message.error(i18n.t(err.i18n));
-                } else {
-                    message.error(err.message);
-                }
-            });
-        } else {
-            form.resetFields();
-        }
-    }, [props.id, props.componentKey]);
-
     return (
         <Form {...formItemLayout} form={form} onFinish={onFinish} scrollToFirstError onFinishFailed={onFinishFailed} autoComplete="off" >
             <Form.Item name="id" noStyle />
@@ -66,16 +65,16 @@ const ModuleCodeEdit = (props) => {
                         <Input placeholder={i18n.t("fullName")} />
                     </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} lg={12}>
-                    <Form.Item name="email" label={i18n.t("email")} rules={[{ required: true, },]}  >
+                {/* <Col xs={24} sm={24} lg={12}>
+                    <Form.Item name="email" label={i18n.t("email")} rules={[{ required: false, },]}  >
                         <Input placeholder={i18n.t("email")} />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} lg={12}>
-                    <Form.Item name="username" label={i18n.t("userName")} rules={[{ required: true, },]}  >
+                    <Form.Item name="username" label={i18n.t("userName")} rules={[{ required: false, },]}  >
                         <Input placeholder={i18n.t("userName")} />
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Col xs={24} sm={24} lg={12}>
                     <Form.Item name="age" label={i18n.t("age")} rules={[{ required: true, },]}  >
                         <InputNumber placeholder={i18n.t("age")} />
@@ -104,4 +103,4 @@ const ModuleCodeEdit = (props) => {
 
 const mapDispatchToProps = { setLoading: baseActions.setLoading };
 
-export default compose(withTranslation(), connect(null, mapDispatchToProps))(ModuleCodeEdit);
+export default compose(withTranslation(), connect(null, mapDispatchToProps))(UserEdit);

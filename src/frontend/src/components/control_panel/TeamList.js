@@ -1,25 +1,25 @@
 import React from "react";
 import DataGrid from "components/datagrid/DataGrid";
-import Edit from "./TeamPlayerEdit";
+import Edit from "./TeamEdit";
 
-const TeamPlayerList = (props) => {
+const TeamList = (props) => {
 
     const dataGridProps = {
-        querName: "team/player/getTeamPlayer",
+        querName: "team/getAll",
         columnNameList: [
+            { name: "tournament", columnType: "ChildData", childName: "typeValue" },
             { name: "teamName" },
-            { name: "playerName" },
-            { name: "playerNumber" },
+            { name: "teamLeader", columnType: "ChildData", childName: "fullName" },
         ],
     }
 
     if (props.isEditable) {
         dataGridProps.columnNameList.push({ name: "id", title: "infocard", columnType: "InfoCardLink", comp: Edit });
-        dataGridProps.columnNameList.push({ name: "id", title: "delete", columnType: "DeleteLink", href: "team/player/delete/" });
+        dataGridProps.columnNameList.push({ name: "id", title: "delete", columnType: "DeleteLink", href: "team/delete/" });
         dataGridProps.newRecordComponent = Edit;
     }
 
     return <DataGrid {...dataGridProps} />;
 }
 
-export default TeamPlayerList;
+export default TeamList;

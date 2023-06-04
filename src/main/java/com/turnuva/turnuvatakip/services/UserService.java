@@ -49,16 +49,16 @@ public class UserService {
         try {
             if (userData != null && userData.isPresent()) {
                 User userModel = userData.get();
-                userModel.setUserName(user.getUsername());
+                //userModel.setUserName(user.getUsername());
+                //userModel.setEmail(user.getEmail());
                 userModel.setFullName(user.getFullName());
                 userModel.setRole(user.getRole());
-                userModel.setEmail(user.getEmail());
                 userModel.setAge(user.getAge());
                 return userRepository.save(userModel);
             } else {
-                User userModel = userRepository
-                        .save(new User(user.getUsername(), user.getFullName(), user.getRole(), user.getEmail(),
-                                user.getAge(), "1"));
+                var newModel = new User(user.getUsername(), user.getFullName(), user.getRole(), user.getEmail(),
+                        user.getAge(), "1");
+                var userModel = userRepository.save(newModel);
                 return userModel;
             }
         } catch (Exception e) {

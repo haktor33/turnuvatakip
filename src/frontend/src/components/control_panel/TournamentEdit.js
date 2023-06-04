@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Row, Col, Button, message, InputNumber, Select } from 'antd';
+import { Form, Row, Col, Button, message, InputNumber, Select } from 'antd';
 import i18n from 'i18n';
 import { compose } from 'redux'
 import { withTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ const formItemLayout = {
     wrapperCol: { sm: { span: 24 }, md: { span: 16 } }
 };
 
-const ModuleCodeEdit = (props) => {
+const TournamentEdit = (props) => {
     const [form] = Form.useForm();
 
     const onFinish = async (values) => {
@@ -94,4 +94,4 @@ const ModuleCodeEdit = (props) => {
 
 const mapDispatchToProps = { setLoading: baseActions.setLoading };
 
-export default compose(withTranslation(), connect(null, mapDispatchToProps))(ModuleCodeEdit);
+export default compose(withTranslation(), connect(null, mapDispatchToProps))(TournamentEdit);

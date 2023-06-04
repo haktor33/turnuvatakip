@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turnuva.turnuvatakip.model.Team;
+import com.turnuva.turnuvatakip.payload.response.MessageResponse;
 import com.turnuva.turnuvatakip.respository.TeamRepository;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,11 +34,7 @@ public class TeamController extends _BaseController{
     public ResponseEntity<List<Team>> getAll() {
         var list = new ArrayList<Team>();
         repository.findAll().forEach(list::add);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -53,8 +50,8 @@ public class TeamController extends _BaseController{
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<Team> save(@RequestParam(required = false) Long id, @RequestBody Team model) {
-        var data = repository.findById(id == null ? -1 : id);
+    public ResponseEntity<?> save(@RequestBody Team model) {
+        var data = repository.findById(model.getId());
         try {
             Team modelData;
             if (data.isPresent()) {
@@ -69,8 +66,7 @@ public class TeamController extends _BaseController{
             }
             return new ResponseEntity<>(modelData, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new MessageResponse(e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -21,13 +21,13 @@ const InfoCardLink = (props) => {
     const getButtonComp = () => {
         if (props.cellData) {
             return (
-                <Button size="small" type="link" onClick={showModal}>
+                <Button key={state.componentKey} size="small" type="link" onClick={showModal}>
                     {i18n.t(props.title)}
                 </Button>
             );
         } else {
             return (
-                <Button icon={<PlusSquareOutlined />} type="primary" onClick={showModal}>
+                <Button key={state.componentKey} icon={<PlusSquareOutlined />} type="primary" onClick={showModal}>
                     {i18n.t(props.title)}
                 </Button>
             );
@@ -40,7 +40,7 @@ const InfoCardLink = (props) => {
             const { cellData: id, gridRefresh, componentKey, ...otherProps } = props;
             const compProps = { id, gridRefresh, componentKey: state.componentKey, otherProps };
             return (
-                <Modal style={{ top: "50px" }} width="95%" title={i18n.t("infocard")} open={state.modalVisible} cancelButtonProps={{ hidden: true }} okButtonProps={{ hidden: true }} onCancel={handleCancel}>
+                <Modal key={state.componentKey} style={{ top: "50px" }} width="95%" title={i18n.t("infocard")} open={state.modalVisible} cancelButtonProps={{ hidden: true }} okButtonProps={{ hidden: true }} onCancel={handleCancel}>
                     <Spin spinning={props.loading}>
                         <props.comp {...compProps} />
                     </Spin>
@@ -52,7 +52,7 @@ const InfoCardLink = (props) => {
     };
 
     return (
-        <>{getButtonComp()}{getModalContent()}</>
+        <div key={state.componentKey}>{getButtonComp()}{getModalContent()}</div>
     );
 }
 

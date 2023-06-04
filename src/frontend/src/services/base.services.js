@@ -33,7 +33,7 @@ async function _callApi(serviceName, options) {
         if (response.status === 204) {
             return Promise.resolve(true);
         } else if (!response.ok) {
-            if (response.status === 401) {
+            if ([401,403].includes(response.status) ) {
                 // auto logout if 401 response returned from api
                 //history.push({
                 //    pathname: `/`,
@@ -41,7 +41,7 @@ async function _callApi(serviceName, options) {
                 //    state: { referrer: window.location.pathname }
                 //});
                 //window.location.reload(true);
-                return Promise.reject("401 Unauthorized");
+                return Promise.reject(`${response.status} Unauthorized`);
             }
             data = await response.json();
             return Promise.reject(data);

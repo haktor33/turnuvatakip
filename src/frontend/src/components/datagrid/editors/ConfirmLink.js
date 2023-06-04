@@ -9,6 +9,7 @@ const ConfirmLink = (props) => {
         const pathName = props.href + props.cellData;
         queryService.executeLink(pathName).then(result => {
             message.success(result);
+            props.gridRefresh();
         }).catch(err => {
             message.error(err.Errors);
         });

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turnuva.turnuvatakip.model.User;
+import com.turnuva.turnuvatakip.payload.response.MessageResponse;
 import com.turnuva.turnuvatakip.services.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,24 +24,23 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "User", description = "Kişiye ait İşlemler yapılmaktadır. Yeni kişi ekleme,silme,düzeltme ve listeleme.")
 @RestController
 @RequestMapping("/api/user")
-public class UserController extends _BaseController{
+public class UserController extends _BaseController {
     @Autowired
     UserService userService;
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findByUsername")
     public ResponseEntity<User> findByUserName(@RequestParam(required = false) String username) {
         var userData = userService.findByUserName(username);
         return new ResponseEntity<>(userData, HttpStatus.OK);
     }
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
         var userlist = userService.getAll();
         if (userlist == null) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (userlist.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(userlist, HttpStatus.OK);
         }
@@ -59,12 +59,13 @@ public class UserController extends _BaseController{
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<User> save( @RequestBody User user) {
+    public ResponseEntity<?> save(@RequestBody User user) {
         var userData = userService.save(user);
-        if (userData != null) {
+        try {
             return new ResponseEntity<>(userData, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MessageResponse(e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turnuva.turnuvatakip.model.TeamPlayer;
+import com.turnuva.turnuvatakip.payload.response.MessageResponse;
 import com.turnuva.turnuvatakip.payload.response.TeamPlayerResponse;
 import com.turnuva.turnuvatakip.respository.TeamPlayerRepository;
+import com.turnuva.turnuvatakip.respository.TeamRepository;
+import com.turnuva.turnuvatakip.respository.UserRepository;
+import com.turnuva.turnuvatakip.security.services.UserDetailsImpl;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -28,17 +33,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class TeamPlayerController extends _BaseController {
     @Autowired
     TeamPlayerRepository repository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    TeamRepository teamRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<TeamPlayer>> getAll() {
         var list = new ArrayList<TeamPlayer>();
         repository.findAll().forEach(list::add);
-        if (list.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -48,12 +53,40 @@ public class TeamPlayerController extends _BaseController {
         var response = new ArrayList<TeamPlayerResponse>();
         repository.findAll().forEach(list::add);
         list.forEach(item -> response.add(new TeamPlayerResponse(item)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-        if (response.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @GetMapping("/getOwnTeamPlayer")
+    public ResponseEntity<List<TeamPlayerResponse>> getOwnTeamPlayer() {
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var teamLeaderId = ((UserDetailsImpl) principal).getId();
+        var team = teamRepository.findByTeamLeaderId(teamLeaderId);
+
+        var list = new ArrayList<TeamPlayer>();
+        var response = new ArrayList<TeamPlayerResponse>();
+        repository.findByTeamId(team.getId()).forEach(list::add);
+        list.forEach(item -> response.add(new TeamPlayerResponse(item)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @GetMapping("/updatePlayerStatus")
+    public ResponseEntity<?> updatePlayerStatus(@RequestParam(required = true) Long playerId,
+            @RequestParam(required = true) Boolean status) {
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var teamLeaderId = ((UserDetailsImpl) principal).getId();
+
+        var player = repository.findById(playerId).get();
+        var playerTeamLeader = player.getTeam().getTeamLeader().getId();
+
+        if (playerTeamLeader != teamLeaderId) {
+            return new ResponseEntity<>(new MessageResponse("Sadece kendi takiminizda degisiklik yapabilirsiniz!"),
+                    HttpStatus.BAD_REQUEST);
         }
+        player.setIsMain(status);
+        repository.save(player);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -69,8 +102,28 @@ public class TeamPlayerController extends _BaseController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<TeamPlayer> save(@RequestParam(required = false) Long id, @RequestBody TeamPlayer model) {
-        var data = repository.findById(id == null ? -1 : id);
+    public ResponseEntity<?> save(@RequestBody TeamPlayer model) {
+        var user = userRepository.getById(model.getPlayer().getId());
+        // 30 yas kontrolu
+        if (user.getAge() < 30) {
+            var ageCount = repository.getAgeLessThan30(model.getTeam().getId(), model.getId());
+            if (ageCount >= 3) {
+                return new ResponseEntity<>(new MessageResponse("30 yas alti 3 kisiden fazla olamaz!"),
+                        HttpStatus.BAD_REQUEST);
+            }
+        }
+        if (model.getId() <= 0) {
+            // oyuncu limit kontrolu
+            var team = teamRepository.findById(model.getTeam().getId());
+            var playerCount = repository.countByTeam(team.get());
+            var maxPlayerCount = team.get().getTournament().getMaxPlayerCount();
+            if (playerCount >= maxPlayerCount) {
+                return new ResponseEntity<>(
+                        new MessageResponse("Bir takımda enfazla " + maxPlayerCount + " oyuncu olabilir!"),
+                        HttpStatus.BAD_REQUEST);
+            }
+        }
+        var data = repository.findById(model.getId());
         try {
             TeamPlayer modelData;
             if (data.isPresent()) {
@@ -85,8 +138,7 @@ public class TeamPlayerController extends _BaseController {
             }
             return new ResponseEntity<>(modelData, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(new MessageResponse(e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
