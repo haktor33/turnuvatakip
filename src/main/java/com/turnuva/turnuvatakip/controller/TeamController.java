@@ -28,7 +28,7 @@ public class TeamController extends _BaseController{
     @Autowired
     TeamRepository repository;
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<Team>> getAll() {
         var list = new ArrayList<Team>();
@@ -40,7 +40,7 @@ public class TeamController extends _BaseController{
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getById")
     public ResponseEntity<Team> getById(@RequestParam(required = false) Long id) {
         var modelData = repository.findById(id);

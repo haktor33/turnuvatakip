@@ -14,12 +14,12 @@ const items = [
     {
         key: '2',
         label: 'Tournament List',
-        children: <TournamentList />,
+        children: <TournamentList isEditable />,
     },
     {
         key: '3',
         label: `Match List`,
-        children: <MatchList />,
+        children: <MatchList isEditable />,
     },
     {
         key: '4',
@@ -30,7 +30,7 @@ const items = [
 
 const AdminPage = () => {
 
-    return <Tabs defaultActiveKey="4" items={items} />
+    return <Tabs destroyInactiveTabPane defaultActiveKey="4" items={items} />
 
 }
 

@@ -33,8 +33,7 @@ public class UserController extends _BaseController{
         return new ResponseEntity<>(userData, HttpStatus.OK);
     }
     
-    
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
         var userlist = userService.getAll();

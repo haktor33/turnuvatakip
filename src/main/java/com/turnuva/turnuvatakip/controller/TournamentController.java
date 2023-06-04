@@ -62,10 +62,11 @@ public class TournamentController extends _BaseController {
                 modelData = data.get();
                 modelData.setYear(model.getYear());
                 modelData.setTypeValue(model.getTypeValue());
+                modelData.setMaxPlayerCount(model.getMaxPlayerCount());
                 repository.save(modelData);
                 return new ResponseEntity<>(modelData, HttpStatus.OK);
             } else {
-                Tournament newDto = new Tournament(model.getYear(), model.getTypeValue());
+                Tournament newDto = new Tournament(model.getYear(), model.getTypeValue(),model.getMaxPlayerCount());
                 modelData = repository.save(newDto);
             }
             return new ResponseEntity<>(modelData, HttpStatus.OK);

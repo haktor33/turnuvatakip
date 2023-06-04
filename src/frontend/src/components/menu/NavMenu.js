@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"
 import { Menu } from 'antd';
-import { VideoCameraOutlined, UserOutlined, BorderlessTableOutlined, } from '@ant-design/icons';
+import { VideoCameraOutlined, UserOutlined, BorderlessTableOutlined, LoginOutlined } from '@ant-design/icons';
 import i18n from "i18n";
 
 const NavMenu = () => {
@@ -22,6 +22,11 @@ const NavMenu = () => {
                 key: '3',
                 icon: <BorderlessTableOutlined />,
                 label: <Link to="/scoreboard">{i18n.t("pages.scoreboard")}</Link>,
+            },
+            {
+                key: '4',
+                icon: <LoginOutlined />,
+                label: <Link to="/login">{i18n.t("pages.login")}</Link>,
             },
         ]}
     />

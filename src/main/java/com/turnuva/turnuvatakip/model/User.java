@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -35,7 +34,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotBlank
     @Size(max = 20)
     @Column(name = "user_name")
     private String username;
@@ -46,13 +44,11 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @NotBlank
     @Size(max = 50)
     @Email
     @Column(name = "email")
     private String email;
 
-    @NotBlank
     @Size(max = 120)
     @Column(name = "password")
     @JsonIgnore

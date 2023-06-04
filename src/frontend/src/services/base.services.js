@@ -41,6 +41,7 @@ async function _callApi(serviceName, options) {
                 //    state: { referrer: window.location.pathname }
                 //});
                 //window.location.reload(true);
+                return Promise.reject("401 Unauthorized");
             }
             data = await response.json();
             return Promise.reject(data);

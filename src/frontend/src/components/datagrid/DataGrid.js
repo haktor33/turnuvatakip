@@ -47,7 +47,7 @@ const DataGrid = (props) => {
             pagination.total = result.totalCount || result.length;
             setState({ ...state, data: result.pageList || result, pagination, loading: false });
         }).catch(err => {
-            message.error(err.Errors);
+            message.error(err);
             setState({ ...state, pagination, loading: false });
         });
     }

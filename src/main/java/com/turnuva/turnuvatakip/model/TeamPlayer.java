@@ -12,7 +12,7 @@ public class TeamPlayer {
 
     }
 
-    public TeamPlayer(Team team, User player,String number) {
+    public TeamPlayer(Team team, User player, String number) {
         this.team = team;
         this.player = player;
         this.number = number;
@@ -32,6 +32,9 @@ public class TeamPlayer {
 
     @Column(name = "number")
     private String number;
+
+    @Column(name = "is_main")
+    private Boolean isMain = false;
 
     public long getId() {
         return id;
@@ -65,5 +68,4 @@ public class TeamPlayer {
         this.number = number;
     }
 
-    
 }

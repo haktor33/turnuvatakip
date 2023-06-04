@@ -1,10 +1,12 @@
 package com.turnuva.turnuvatakip.model;
+
 import com.turnuva.turnuvatakip.constants.Enums.ETournamentType;
 
 import jakarta.persistence.*;
+
 @Entity
 @Table(name = "tournaments", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"year", "typeValue"}),
+        @UniqueConstraint(columnNames = { "year", "typeValue" }),
 })
 public class Tournament {
 
@@ -12,9 +14,10 @@ public class Tournament {
 
     }
 
-    public Tournament(int year, ETournamentType typeValue) {
+    public Tournament(int year, ETournamentType typeValue, int maxPlayerCount) {
         this.year = year;
         this.typeValue = typeValue;
+        this.maxPlayerCount = maxPlayerCount;
     }
 
     @Id
@@ -27,6 +30,9 @@ public class Tournament {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "typeValue")
     private ETournamentType typeValue;
+
+    @Column(name = "max_player_count")
+    private int maxPlayerCount;
 
     public long getId() {
         return id;
@@ -50,5 +56,13 @@ public class Tournament {
 
     public void setTypeValue(ETournamentType typeValue) {
         this.typeValue = typeValue;
-    }   
+    }
+
+    public int getMaxPlayerCount() {
+        return maxPlayerCount;
+    }
+
+    public void setMaxPlayerCount(int maxPlayerCount) {
+        this.maxPlayerCount = maxPlayerCount;
+    }
 }

@@ -67,11 +67,6 @@ const ModuleCodeEdit = (props) => {
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} lg={12}>
-                    <Form.Item name="maxPlayerCount" label={i18n.t("maxPlayerCount")} rules={[{ required: true, },]}  >
-                        <InputNumber placeholder={i18n.t("maxPlayerCount")} />
-                    </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} lg={12}>
                     <Form.Item name="typeValue" label={i18n.t("type")} rules={[{ required: true, },]}  >
                         <Select placeholder={i18n.t("type")} >
                             <Select.Option value="FOOTBALL">{i18n.t("FOOTBALL")}</Select.Option>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turnuva.turnuvatakip.model.TeamPlayer;
+import com.turnuva.turnuvatakip.payload.response.TeamPlayerResponse;
 import com.turnuva.turnuvatakip.respository.TeamPlayerRepository;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +29,7 @@ public class TeamPlayerController extends _BaseController {
     @Autowired
     TeamPlayerRepository repository;
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<TeamPlayer>> getAll() {
         var list = new ArrayList<TeamPlayer>();
@@ -41,6 +42,21 @@ public class TeamPlayerController extends _BaseController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/getTeamPlayer")
+    public ResponseEntity<List<TeamPlayerResponse>> getTeamPlayer() {
+        var list = new ArrayList<TeamPlayer>();
+        var response = new ArrayList<TeamPlayerResponse>();
+        repository.findAll().forEach(list::add);
+        list.forEach(item -> response.add(new TeamPlayerResponse(item)));
+
+        if (response.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getById")
     public ResponseEntity<TeamPlayer> getById(@RequestParam(required = false) Long id) {
         var modelData = repository.findById(id);

@@ -4,6 +4,7 @@ export default {
         "contact": "İletişim",
         "admin": "Yönetici",
         "scoreboard": "Puan Durumu",
+        "login": "Giriş Ekranı",
     },
     "english": "İngilizce",
     "turkish": "Türkçe",

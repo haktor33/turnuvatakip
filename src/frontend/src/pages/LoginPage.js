@@ -21,6 +21,10 @@ const LoginPage = (props) => {
     };
 
     useEffect(() => {
+        props.logout();
+    }, [])
+    
+    useEffect(() => {
         if (props.loggedIn) {
             const redirectUrl = new URLSearchParams(search).get('redirectUrl');
             if (redirectUrl)
