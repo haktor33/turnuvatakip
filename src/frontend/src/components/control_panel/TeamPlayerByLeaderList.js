@@ -10,8 +10,8 @@ const TeamPlayerByLeaderList = (props) => {
             { name: "playerName" },
             { name: "playerNumber" },
             { name: "isMain", columnType: "Boolean" },
-            { name: "id", title: "Asil ", columnType: "ConfirmLink", href: "team/player/updatePlayerStatus?status=true&playerId=" },
-            { name: "id", title: "Yedek ", columnType: "ConfirmLink", href: "team/player/updatePlayerStatus?status=false&playerId=" }
+            { name: "id", title: "Asil Oyuncu Yap", columnType: "ConfirmLink", href: "team/player/updatePlayerStatus?status=true&playerId=" },
+            { name: "id", title: "Yedek Oyuncu Yap", columnType: "ConfirmLink", href: "team/player/updatePlayerStatus?status=false&playerId=" }
         ],
     }
 

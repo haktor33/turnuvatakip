@@ -42,7 +42,7 @@ const items = [
 
 const AdminPage = () => {
     const userData = JSON.parse(localStorage.getItem('AuthStorage'));
-    if (!userData.roles.includes("ROLE_ADMIN")) {
+    if (!userData.roles || !userData.roles.includes("ROLE_ADMIN")) {
         message.error("Bu sayfayi gorme yetkiniz yok!");
         return <></>
     }

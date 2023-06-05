@@ -30,7 +30,7 @@ public class TeamMatchController extends _BaseController{
     @Autowired
     TeamMatchRepository repository;
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ROLE_TEAMLEADER') or hasRole('ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<TeamMatch>> getAll() {
         var list = new ArrayList<TeamMatch>();

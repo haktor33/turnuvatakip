@@ -56,7 +56,7 @@ public class TeamPlayerController extends _BaseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_TEAMLEADER') or hasRole('ADMIN')")
     @GetMapping("/getOwnTeamPlayer")
     public ResponseEntity<List<TeamPlayerResponse>> getOwnTeamPlayer() {
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -70,7 +70,7 @@ public class TeamPlayerController extends _BaseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_TEAMLEADER') or hasRole('ADMIN')")
     @GetMapping("/updatePlayerStatus")
     public ResponseEntity<?> updatePlayerStatus(@RequestParam(required = true) Long playerId,
             @RequestParam(required = true) Boolean status) {
