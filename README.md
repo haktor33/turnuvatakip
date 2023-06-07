@@ -1,1 +1,80 @@
-# turnuvatakip
+# java springboot , java security with jwt token , maven 3 , hibernate , postgresql , swagger , boilerplate
+# TurnuvaTakip Example Project
+
+# Spring Boot Security Login example with JWT and H2 example
+
+- Appropriate Flow for User Login and Registration with JWT and HttpOnly Cookie
+- Spring Boot Rest Api Architecture with Spring Security
+- How to configure Spring Security to work with JWT
+- How to define Data Models and association for Authentication and Authorization
+- Way to use Spring Data JPA to interact with H2 Database
+
+## User Registration, Login and Authorization process.
+
+![spring-boot-security-login-jwt-flow](spring-boot-security-login-jwt-flow.png)
+
+## Spring Boot Server Architecture with Spring Security
+You can have an overview of our Spring Boot Server with the diagram below:
+
+![spring-boot-security-login-jwt-architecture](spring-boot-security-login-jwt-architecture.png)
+
+For more detail, please visit:
+> [Spring Boot Security Login example with JWT and H2 example](https://www.bezkoder.com/spring-boot-security-login-jwt/)
+
+> [For MySQL/PostgreSQL](https://www.bezkoder.com/spring-boot-login-example-mysql/)
+
+> [For MongoDB](https://www.bezkoder.com/spring-boot-jwt-auth-mongodb/)
+
+## Dependency
+– If you want to use PostgreSQL:
+```xml
+<dependency>
+  <groupId>org.postgresql</groupId>
+  <artifactId>postgresql</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
+– or MySQL:
+```xml
+<dependency>
+  <groupId>com.mysql</groupId>
+  <artifactId>mysql-connector-j</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
+## Configure Spring Datasource, JPA, App properties
+Open `src/main/resources/application.properties`
+- For PostgreSQL:
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/testdb
+spring.datasource.username=postgres
+spring.datasource.password=123
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# Hibernate ddl auto (create, create-drop, validate, update)
+spring.jpa.hibernate.ddl-auto=update
+
+# App Properties
+bezkoder.app.jwtSecret= ======================BezKoder=Spring===========================
+bezkoder.app.jwtExpirationMs= 86400000
+```
+- For MySQL
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/testdb?useSSL=false
+spring.datasource.username=root
+spring.datasource.password=123456
+
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+
+# App Properties
+bezkoder.app.jwtSecret= ======================BezKoder=Spring===========================
+bezkoder.app.jwtExpirationMs= 86400000
+```
+## Run Spring Boot application
+```
+mvn spring-boot:run
+
+
